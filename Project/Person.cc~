@@ -1,0 +1,65 @@
+// Parth Gupta
+// pg22947
+
+#include<iostream>
+#include "Person.h"
+
+
+Person::Person(string name_input) {
+  name = name_input;
+  status_number = 0;
+  remaining_days_sick = -2; //default setting
+};
+
+Person::Person() {
+  name = "Joe";
+  status_number = 0;
+  remaining_days_sick = -2; //default setting
+};
+
+string Person::print_name() {
+  return name;
+};
+
+int Person::print_remaining_days() {
+  return remaining_days_sick;
+};
+
+void Person::infect(int total_days_sick) {
+  remaining_days_sick = total_days_sick;
+};
+
+void Person::update() {
+  if (remaining_days_sick>0) {
+    status_number = 1;      
+    remaining_days_sick--;
+  } else if (remaining_days_sick == 0) {
+    status_number = -1;
+  }
+};
+
+void Person::inoculate() {
+  status_number = -2;
+};
+
+string Person::status_string() {
+  if (status_number==0) {
+    return "susceptible";
+  } else if (status_number==1) {
+    return "sick";
+  } else if (status_number==-1) {
+    return "recovered";
+  } else if (status_number==-2) {
+    return "inoculated";
+  }
+};
+
+bool Person::is_stable() {
+  if (status_number<=-1) {
+    return true;
+  } else {
+    return false;
+  }
+};
+
+

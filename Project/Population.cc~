@@ -1,0 +1,119 @@
+// Parth Gupta
+// pg22947
+
+#include<iostream>
+#include<cstdlib>
+#include<ctime>
+#include "Population.h"
+
+
+// The constructor for the Population class takes in the size of the population
+Population:: Population(int npeople):  population(vector<Person>(npeople)) {};
+
+
+// The probability of contagion - spreading of illness from one sick person to 
+// another - is a data member an object of class Population; this method
+// collects that probability, given by the user in Part III and IV
+void Population::set_probability_of_transfer(float contagion_probability) {
+  probability_of_transfer = contagion_probability;
+};
+
+
+// Allows access of objects of class Person (and subsequently their methods),
+// which compose objects of class Population. Useful if needed outside of the 
+// object.
+Person Population::get_person(int person_position) {
+    return population.at(person_position);
+  };
+
+
+// Takes in the percent of individuals inoculated, and randomly inoculates
+// the necessary number of individuals within the population. Used in Part 
+// III and IV.
+void Population::inoculate(float inoculation_percent) {
+  int number_inoculated = inoculation_percent * population.size();
+  srand(time(NULL));
+  for (int i=1; i<=number_inoculated; i++) {
+    bool new_inoculation = false;
+    while (!new_inoculation) {
+      int inoculated_person = rand() % population.size();
+      // This conditional ensures that only individuals not previously 
+      // inoculated become inoculated, so that the given percent of 
+      // inoculated individuals is accurately met
+      if (population.at(inoculated_person).status_string()!="inoculated") {
+	population.at(inoculated_person).inoculate();
+	new_inoculation = true;
+      }
+    }
+  }
+};
+
+
+//
+void Population::random_infection() {
+  int random_person = rand()% population.size();
+  population.at(random_person).infect(5);
+  population.at(random_person).update();
+};
+
+
+int Population::count_infected() {
+  int number_infected=0;
+  for (int i=0; i<population.size(); i++) {
+    if (population.at(i).status_string()=="sick") {
+      number_infected++;
+    }
+  }
+  return number_infected;  
+};
+   
+void Population::update() {
+  for (int i=0; i<population.size(); i++) {
+    population.at(i).update();
+  }
+};
+ 
+
+void Population::update_contagion() {
+  for (int i=0; i<population.size(); i++) {
+    population.at(i).update();
+    if (population.at(i).status_string()=="sick") {
+      float chance_to_infect = (rand()%100) / ((float) 100);
+      if (chance_to_infect < probability_of_transfer) {
+	int which_direction = rand()%2;
+	if (which_direction==0 && i-1>=0) {
+	  if (population.at(i-1).status_string()=="susceptible") {
+	    population.at(i-1).infect(5);
+	  }
+	} else if (which_direction==1 && i+1<population.size()) {
+	  if (population.at(i+1).status_string()=="susceptible") {
+	    population.at(i+1).infect(5);
+	  }
+	}
+      }
+    }
+  }
+};
+
+
+void Population::update_spreading() {
+  int number_contacted_by_sick = 6;
+  for (int i=0; i<population.size(); i++) {
+    population.at(i).update();
+
+    if (population.at(i).status_string()=="sick") {
+      for (int count=1; count<=number_contacted_by_sick; count++) {
+	float chance_to_infect = (rand()%100) / ((float) 100);
+	if (chance_to_infect < probability_of_transfer) {
+	  int which_person = rand() % population.size();
+	  if (population.at(which_person).status_string()=="susceptible") {
+	    population.at(which_person).infect(5);
+	  }
+	}
+      }
+    }
+  }
+};
+
+ 
+

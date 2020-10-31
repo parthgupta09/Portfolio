@@ -1,0 +1,59 @@
+// Parth Gupta
+// pg22947
+
+#include<iostream>
+#include<cstdlib>
+#include<ctime>
+#include "Population.h"
+
+using std::cout;
+using std::cin;
+using std::endl;
+
+
+int main() {
+
+  cout << "Give me a population size: ";
+  int population_size;
+  cin >> population_size;
+
+  cout << "How contagious is the disease (decimal): ";
+  float contagion_probability;
+  cin >> contagion_probability;
+
+  cout << "What percent of people were vaccinated (decimal): ";
+  float inoculation_percent;
+  cin >> inoculation_percent;
+
+  Population population1(population_size);
+  population1.set_probability_of_transfer(contagion_probability); 
+  population1.inoculate(inoculation_percent);
+  population1.random_infection();
+
+  for (int day=1; ; day++) {
+    cout << "On day " << day << ", " << population1.count_infected() << " are sick: ";
+    
+    for (int i=0; i<population_size; i++) { 
+      if (population1.get_person(i).status_string()=="susceptible") {
+	cout << "? ";
+      } else if (population1.get_person(i).status_string()=="sick") {
+	cout << "+ ";
+      } else if (population1.get_person(i).status_string()=="recovered") {
+	cout << "- ";
+      } else if (population1.get_person(i).status_string()=="inoculated") {
+	cout << "* ";
+      }
+    }   
+    cout << endl;
+
+    if (population1.count_infected()==0) {
+	cout << "Disease ran its course by day " << day << endl;
+	break;
+      }  
+    population1.update_contagion();  
+    }  
+
+    return 0;
+}
+ 
+

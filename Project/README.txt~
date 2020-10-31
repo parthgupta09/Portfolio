@@ -1,0 +1,23 @@
+Infectious Disease Project
+Parth Gupta
+SDS 322 - Intro to Scientific Programming
+
+Instructions on compiling and running programs for project
+
+Part I - Coding the Basics (39.2)
+1. Compile methods of class Person (Person.cc) into object file (Person.o):
+   
+   icpc -c Person.cc
+
+2. Compile main program for Part I (mainpart1.cc) into object file (mainpart1.o):
+   
+   icpc -c mainpart1.cc
+
+3. Link newly created methods (Person.o) and main program (mainpart1.o) 
+    object files to create executable (part1program):
+   
+   icpc -o part1program mainpart1.o Person.o
+
+4. Run executable (part1program):
+
+   ./part1program
